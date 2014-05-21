@@ -1,3 +1,11 @@
+3.2.69.grk
+
+    Añadido soporte para reproducir torrents con XBMCTorrent
+
+3.2.69
+
+    http://blog.tvalacarta.info/2014/05/03/pelisalacarta-3-2-69/#more-8227
+
 3.2.10
 
     Cambios comunes a todas las plataformas

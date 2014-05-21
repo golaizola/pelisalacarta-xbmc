@@ -8,9 +8,9 @@
 # Constants
 __plugin__  = "pelisalacarta"
 __author__  = "pelisalacarta"
-__url__     = "http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/"
-__date__ = "02/05/2014"
-__version__ = "3.2.69"
+__url__     = "https://github.com/golaizola/pelisalacarta-xbmc"
+__date__    = "21/05/2014"
+__version__ = "3.2.69.grk"
 
 import os
 import sys
