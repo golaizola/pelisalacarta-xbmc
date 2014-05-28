@@ -1,7 +1,10 @@
 3.2.69.grk
 
-    Añadido soporte para reproducir torrents con XBMCTorrent
-    Añadida calidad de archivos en series.ly http://www.mimediacenter.info/foro/viewtopic.php?f=6&t=5972
+    - Añadido soporte para reproducir torrents con XBMCTorrent
+    - Añadida calidad de archivos en series.ly http://www.mimediacenter.info/foro/viewtopic.php?f=6&t=5972
+    - Añadido Zpeliculas y arreglo pepitos
+        http://www.mimediacenter.info/foro/viewtopic.php?f=14&t=5979&start=10
+
 
 3.2.69
 
