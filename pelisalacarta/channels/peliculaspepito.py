@@ -28,8 +28,6 @@ PELICULASPEPITO_REQUEST_HEADERS.append(["Accept-Encoding","gzip, deflate"])
 PELICULASPEPITO_REQUEST_HEADERS.append(["Accept-Language","es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3"])
 PELICULASPEPITO_REQUEST_HEADERS.append(["Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"])
 PELICULASPEPITO_REQUEST_HEADERS.append(["Connection","keep-alive"])
-PELICULASPEPITO_REQUEST_HEADERS.append(["Cookie","_ga=GA1.2.1377145840.1398328462"])
-PELICULASPEPITO_REQUEST_HEADERS.append(["Referer","http://www.peliculaspepito.com/"])
 
 def isGeneric():
     return True
@@ -39,11 +37,11 @@ def mainlist(item):
 
     itemlist = []
 	
-    itemlist.append( Item(channel=__channel__, action="novedades"        , title="Estrenos", url="http://www.peliculaspepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-    itemlist.append( Item(channel=__channel__, action="nuevas"        , title="Últimas añadidas", url="http://www.peliculaspepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-    itemlist.append( Item(channel=__channel__, action="listalfabetico"   , title="Listado alfabético",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-    itemlist.append( Item(channel=__channel__, action="lomasvisto"    , title="Lo mas visto",    url="http://www.peliculaspepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-    itemlist.append( Item(channel=__channel__, action="buscar"        , title="Buscador", url="http://www.peliculaspepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+    itemlist.append( Item(channel=__channel__, action="novedades"        , title="Estrenos", url="http://www.peliculaspepito.com/"))
+    itemlist.append( Item(channel=__channel__, action="nuevas"        , title="Últimas añadidas", url="http://www.peliculaspepito.com/"))
+    itemlist.append( Item(channel=__channel__, action="listalfabetico"   , title="Listado alfabético"))
+    itemlist.append( Item(channel=__channel__, action="lomasvisto"    , title="Lo mas visto",    url="http://www.peliculaspepito.com/"))
+    itemlist.append( Item(channel=__channel__, action="buscar"        , title="Buscador", url="http://www.peliculaspepito.com/"))
     
     return itemlist
 
@@ -237,7 +235,7 @@ def allserieslist(item):
         scrapedtitle = unicode( scrapedtitle, "iso-8859-1" , errors="replace" ).encode("utf-8")
         scrapedplot = unicode( scrapedplot, "iso-8859-1" , errors="replace" ).encode("utf-8")
 
-        itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, show=title,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, show=title))
 
     return itemlist
 
@@ -247,7 +245,7 @@ def listalfabetico(item):
     itemlist = []
     itemlist.append( Item(channel=__channel__, action="peliculas" , title="0-9",url="http://www.peliculaspepito.com/lista-peliculas/num/"))
     for letra in ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']:
-        itemlist.append( Item(channel=__channel__, action="peliculas" , title=letra,url="http://www.peliculaspepito.com/lista-peliculas/"+letra.lower()+"/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title=letra,url="http://www.peliculaspepito.com/lista-peliculas/"+letra.lower()+"/"))
 
     return itemlist
 
@@ -346,8 +344,8 @@ def episodios(item):
         itemlist.append( Item(channel=__channel__, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=item.show, viewmode="movie_with_plot"))
 
     if (config.get_platform().startswith("xbmc") or config.get_platform().startswith("boxee")) and len(itemlist)>0:
-        itemlist.append( Item(channel=item.channel, title="Añadir esta serie a la biblioteca de XBMC", url=item.url, action="add_serie_to_library", extra="episodios", show=item.show,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-        itemlist.append( Item(channel=item.channel, title="Descargar todos los episodios de la serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=item.channel, title="Añadir esta serie a la biblioteca de XBMC", url=item.url, action="add_serie_to_library", extra="episodios", show=item.show))
+        itemlist.append( Item(channel=item.channel, title="Descargar todos los episodios de la serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show))
 
     return itemlist
 
@@ -394,16 +392,21 @@ def findvideos(item):
         if "3" in idiomas:
             title = title + " [VOS]"
 
-        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False))
 
     return itemlist
 
 def play(item):
     logger.info("[seriespepito.py] play")
+
+    from helpers import enlacespepito
+
     itemlist=[]
-    
-    data = scrapertools.cache_page(item.url, headers = PELICULASPEPITO_REQUEST_HEADERS)
-    videoitemlist = servertools.find_video_items(data=data)
+
+    mediaurl = enlacespepito.get_server_link_peliculas(item.url)
+
+    # Busca el vídeo
+    videoitemlist = servertools.find_video_items(data=mediaurl)
     i=1
     for videoitem in videoitemlist:
         if not "favicon" in videoitem.url:

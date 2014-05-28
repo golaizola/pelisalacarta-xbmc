@@ -26,8 +26,6 @@ SERIESPEPITO_REQUEST_HEADERS.append(["Accept-Encoding","gzip, deflate"])
 SERIESPEPITO_REQUEST_HEADERS.append(["Accept-Language","es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3"])
 SERIESPEPITO_REQUEST_HEADERS.append(["Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"])
 SERIESPEPITO_REQUEST_HEADERS.append(["Connection","keep-alive"])
-SERIESPEPITO_REQUEST_HEADERS.append(["Cookie","_ga=GA1.2.1377145840.1398328462"])
-SERIESPEPITO_REQUEST_HEADERS.append(["Referer","http://game-of-thrones-juego-de-tronos.seriespepito.com/temporada-3/capitulo-5/"])
 
 def isGeneric():
     return True
@@ -309,11 +307,15 @@ def findvideos(item):
 
 def play(item):
     logger.info("[seriespepito.py] play")
+
+    from helpers import enlacespepito
+
     itemlist=[]
-    
-    data = scrapertools.cache_page(item.url, headers = SERIESPEPITO_REQUEST_HEADERS)
-    
-    videoitemlist = servertools.find_video_items(data=data)
+
+    mediaurl = enlacespepito.get_server_link_series(item.url)
+
+    # Busca el vídeo
+    videoitemlist = servertools.find_video_items(data=mediaurl)
     i=1
     for videoitem in videoitemlist:
         if not "favicon" in videoitem.url:
