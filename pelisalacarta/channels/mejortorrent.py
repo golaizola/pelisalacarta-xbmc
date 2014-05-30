@@ -77,7 +77,7 @@ def getlist(item):
         patron_enlace = "/peli-descargar-torrent-\d+(.*?)\.html"
         action = "play"
         folder = False
-        extra = "peliculas"
+        extra = ""
     elif item.url.find("series-letra") > -1:
         patron  = "<a href='(/serie-descargar-torrent[^']+)'>()"
         patron_enlace = "/serie-descargar-torrents-\d+-\d+-(.*?)\.html"
