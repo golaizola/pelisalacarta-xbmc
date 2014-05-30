@@ -356,7 +356,13 @@ def get_cookie(html):
 def convert_link(html, link_type):
     hash_seed = get_cookie(html);
 
-    hash = hashlib.sha256(hash_seed).hexdigest()
+    HASH_PAT = 'CryptoJS\.(\w+)\('
+    hash_func = scrapertools.find_single_match(html, HASH_PAT).lower()
+    if hash_func == "md5":
+        hash = hashlib.md5(hash_seed).hexdigest()
+    else:
+        hash = hashlib.sha256(hash_seed).hexdigest()
+
     if link_type == PELICULAS_PEPITO:
         hash += '0'
 
