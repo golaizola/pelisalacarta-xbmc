@@ -398,12 +398,11 @@ def findvideos(item):
 
 def play(item):
     logger.info("[seriespepito.py] play")
-
-    from helpers import enlacespepito
-
     itemlist=[]
 
-    mediaurl = enlacespepito.get_server_link_peliculas(item.url)
+    import seriespepito
+
+    mediaurl = seriespepito.get_server_link_peliculas(item.url)
 
     # Busca el vídeo
     videoitemlist = servertools.find_video_items(data=mediaurl)
