@@ -264,7 +264,7 @@ def channels_list():
     #itemlist.append( Item( title="DL-More (FR)"          , channel="dlmore"               , language="FR"    , category="S"       , type="generic"  ))
     itemlist.append( Item( title="DocumaniaTV"           , channel="documaniatv"          , language="ES"    , category="D"       , type="generic"  ))
     # DESACTIVADO - SIN CONTENIDOS itemlist.append( Item( title="Filmixt"               , channel="filmixt"              , language="ES"    , category="F"       , type="generic"  ))
-    #itemlist.append( Item( title="Elite Torrent"        , channel="elitetorrent"       , language="ES"    , category="F,S,D"       , type="generic"     ))
+    itemlist.append( Item( title="Elite Torrent"        , channel="elitetorrent"       , language="ES"    , category="F,S,D"       , type="generic"     ))
     #itemlist.append( Item( title="FilmesOnlineBr"        , channel="filmesonlinebr"       , language="PT"    , category="F"       , type="generic"     ))
     if config.get_setting("enableadultmode") == "true": itemlist.append( Item( title="Filesmonster Catalogue"  , channel="filesmonster_catalogue"           , language="es"    , category="F"   , type="generic"     ))
     itemlist.append( Item( title="Film per tutti (IT)"      , channel="filmpertutti"           , language="IT"    , category="F,S,A"   , type="generic"     ))

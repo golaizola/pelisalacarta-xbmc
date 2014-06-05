@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #:-----------------------------------------------------------
 # pelisalacarta - XBMC Plugin
-# Conector para enlaces a torrent (urls simples)
+# Conector para enlaces a torrent y magnet
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 from core import logger
@@ -13,7 +13,12 @@ def get_video_url( page_url , premium = False , user="" , password="" , video_pa
 
     name = page_url[page_url.rfind("/") + 1:page_url.rfind(".")]
 
-    media_url = "plugin://plugin.video.xbmctorrent/play/%s" % urllib.quote_plus(from_torrent_url(page_url))
+    if page_url.startswith('magnet:'):
+        link = page_url
+    else:
+        link = from_torrent_url(page_url)
+
+    media_url = "plugin://plugin.video.xbmctorrent/play/%s" % urllib.quote_plus(link)
 
     video_urls = [[ "%s [torrent]" % (name), media_url ]]
 

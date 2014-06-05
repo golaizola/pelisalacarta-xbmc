@@ -300,12 +300,12 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
             return
 
     # Si la accion por defecto es "Preguntar", pregunta
-    if default_action=="0":
+    # FIXME: Excepto si el vídeo es un torrent
+    if default_action=="0" and server!="torrent":
         import xbmcgui
         dia = xbmcgui.Dialog()
         seleccion = dia.select(config.get_localized_string(30163), opciones) # "Elige una opción"
         #dia.close()
-
     elif default_action=="1":
         seleccion = 0
     elif default_action=="2":
