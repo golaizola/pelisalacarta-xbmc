@@ -43,7 +43,6 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, action="novedades"        , title="Novedades", url="http://www.seriespepito.com/nuevos-capitulos/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
     itemlist.append( Item(channel=__channel__, action="lomasvisto"        , title="Lo más visto", url="http://www.seriespepito.com/nuevos-capitulos/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
     itemlist.append( Item(channel=__channel__, action="listalfabetico"   , title="Listado alfabético",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
-    itemlist.append( Item(channel=__channel__, action="allserieslist"    , title="Listado completo",    url="http://www.seriespepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
 
     return itemlist
 
