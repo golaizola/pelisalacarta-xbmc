@@ -36,13 +36,13 @@ def mainlist(item):
     logger.info("[seriespepito.py] mainlist")
 
     itemlist = []
-	
+
     itemlist.append( Item(channel=__channel__, action="novedades"        , title="Estrenos", url="http://www.peliculaspepito.com/"))
     itemlist.append( Item(channel=__channel__, action="nuevas"        , title="Últimas añadidas", url="http://www.peliculaspepito.com/"))
     itemlist.append( Item(channel=__channel__, action="listalfabetico"   , title="Listado alfabético"))
     itemlist.append( Item(channel=__channel__, action="lomasvisto"    , title="Lo mas visto",    url="http://www.peliculaspepito.com/"))
     itemlist.append( Item(channel=__channel__, action="buscar"        , title="Buscador", url="http://www.peliculaspepito.com/"))
-    
+
     return itemlist
 
 def buscar(item):
@@ -50,14 +50,14 @@ def buscar(item):
     keyboard.doModal()
     busqueda=keyboard.getText()
     data = scrapertools.cachePage("http://www.peliculaspepito.com/buscador/" + busqueda + "/")
-    data = scrapertools.get_match(data,'<ul class="lista_peliculas">(.*?)</ul>')
+    data = scrapertools.get_match(data,'<ul class="lp">(.*?)</ul>')
     patron  = '<li>'
-    patron += '<a.*?href="([^"]+)"[^<]+'
+    patron += '<a.*?href="([^"]+)">'
     patron += '<img.*?alt="([^"]+)" src="([^"]+)"[^>]+>'
-    
+
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
-    
+
     itemlist = []
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         logger.info("title="+scrapedtitle)
@@ -83,7 +83,7 @@ def novedades(item):
 
     # Descarga la página
     data = scrapertools.cachePage(item.url)
-    data = scrapertools.get_match(data,'<ul class="lista_peliculas">(.*?)</ul>')
+    data = scrapertools.get_match(data,'<ul class="lp">(.*?)</ul>')
     
     '''
     <ul class="lista_peliculas">
@@ -98,7 +98,7 @@ def novedades(item):
 	</a>
 	'''
     patron  = '<li>'
-    patron += '<a.*?href="([^"]+)"[^<]+'
+    patron += '<a.*?href="([^"]+)">'
     patron += '<img.*?alt="([^"]+)" src="([^"]+)"[^>]+>.*?<p class="pidilis">(.*?)</p>'
 
 
