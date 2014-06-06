@@ -374,13 +374,19 @@ def findvideos(item):
     patron = '<td id="tdidioma[^"]+" class="tdidioma"><span class="[^"]+">(.*?)</span></td>.*?'
     patron += '<td id="tdservidor[^"]+" class="tdservidor"><img src="([^"]+)"[^>]+>([^<]+)</td[^<]+'
 	# patron += '<td class="tdenlace"><a class="btn btn-mini enlace_link" data-servidor="([^"]+)" rel="nofollow" target="_blank" title="[^"]+" href="([^"]+)"'
-    patron += '<td class="tdenlace"><a class="btn btn_link" data-servidor="([^"]+)" rel="nofollow" target="_blank" title="([^"]+)" href="([^"]+)"'
+    patron += '<td class="tdenlace"><a class="btn btn_link" data-servidor="([^"]+)" rel="nofollow" target="_blank" title="([^"]+)" href="([^"]+)"><i class="icon-([^"]+)">'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for idiomas,scrapedthumbnail,servidor,dataservidor,scrapedtitle, scrapedurl in matches:
+    for idiomas,scrapedthumbnail,servidor,dataservidor,scrapedtitle, scrapedurl,link_type in matches:
         url = urlparse.urljoin(item.url,scrapedurl)
-        title = item.title + " [" + servidor.replace("&nbsp;","") + "]"
+
+        if link_type == "play":
+            title = "Ver"
+        else:
+            title = "Descargar"
+
+        title += " " + item.title + " [" + servidor.replace("&nbsp;","") + "]"
         plot = ""
 
         if "0" in idiomas:
