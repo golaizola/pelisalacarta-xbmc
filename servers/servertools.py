@@ -23,7 +23,7 @@ FREE_SERVERS.extend(['jumbofiles','nowvideo','streamcloud', 'zinwa', 'dailymotio
 FREE_SERVERS.extend(['vureel','nosvideo','videopremium','movreel','flashx','magnovideo','upafile'])
 FREE_SERVERS.extend(['fileflyer','playedto','tunepk','powvideo','videomega','mega','vidspot','netutv','rutube'])
 FREE_SERVERS.extend(['videozed','documentary','hugefiles', 'firedrive','videott','tumitv','nubestream','gamovideo'])
-FREE_SERVERS.extend(['torrent'])
+FREE_SERVERS.extend(['torrent', 'streaminto'])
 # YA NO FUNCIONAN
 # rutube
 
