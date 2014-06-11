@@ -398,7 +398,7 @@ def findvideos(item):
         if "3" in idiomas:
             title = title + " [VOS]"
 
-        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False))
+        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, extra=item.url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False))
 
     return itemlist
 
@@ -408,7 +408,7 @@ def play(item):
 
     import seriespepito
 
-    mediaurl = seriespepito.get_server_link_peliculas(item.url)
+    mediaurl = seriespepito.get_server_link_peliculas(item.url, item.extra)
 
     # Busca el vídeo
     videoitemlist = servertools.find_video_items(data=mediaurl)

@@ -306,7 +306,7 @@ def findvideos(item):
         if "flag_3" in idiomas:
             title = title + " (VOS)"
 
-        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, extra=item.url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
 
     return itemlist
 
@@ -314,7 +314,7 @@ def play(item):
     logger.info("[seriespepito.py] play")
     itemlist=[]
     
-    mediaurl = get_server_link_series(item.url)
+    mediaurl = get_server_link_series(item.url, item.extra)
 
     # Busca el vídeo
     videoitemlist = servertools.find_video_items(data=mediaurl)
@@ -384,27 +384,36 @@ def convert_link(html, link_type):
 
     return 'http://www.enlacespepito.com/' + href + '.html'
 
-def get_server_link(first_link, link_type):
-    logger.info("[seriespepito.py] first_link="+str(first_link)+", link_type="+str(link_type))
+def get_server_link(first_link, referer):
+    logger.info("[seriespepito.py] first_link=" + first_link + ", link_type=" + referer)
 
-    html = scrapertools.downloadpage(first_link, headers = ENLACESPEPITO_REQUEST_HEADERS)
+    # Sin el Referer da 403
+    headers = list(ENLACESPEPITO_REQUEST_HEADERS)
+    headers.append(['Referer', referer])
+
+    html = scrapertools.downloadpage(first_link, headers = headers)
     logger.info("[seriespepito.py] html="+html)
+
+    if referer.find('.seriespepito.com') != -1:
+        link_type = SERIES_PEPITO
+    else:
+        link_type = PELICULAS_PEPITO
 
     fixed_link = convert_link(html, link_type)
     logger.info("[seriespepito.py] fixed_link="+fixed_link)
 
-    # Sin el Referer da 404
-    ENLACESPEPITO_REQUEST_HEADERS.append(['Referer', first_link])
+    # Sin el Referer da 403
+    headers[-1] = ['Referer', first_link]
 
-    return scrapertools.get_header_from_response(fixed_link, header_to_get="location", headers = ENLACESPEPITO_REQUEST_HEADERS)
+    return scrapertools.get_header_from_response(fixed_link, header_to_get="location", headers = headers)
 
 # Estas funciones son las únicas que deberían llamarse desde fuera
 #
-def get_server_link_series(first_link):
-    return get_server_link(first_link, SERIES_PEPITO)
+def get_server_link_series(first_link, referer):
+    return get_server_link(first_link, referer)
 
-def get_server_link_peliculas(first_link):
-    return get_server_link(first_link, PELICULAS_PEPITO)
+def get_server_link_peliculas(first_link, referer):
+    return get_server_link(first_link, referer)
 
 
 
