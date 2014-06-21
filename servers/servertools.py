@@ -24,6 +24,7 @@ FREE_SERVERS.extend(['vureel','nosvideo','videopremium','movreel','flashx','upaf
 FREE_SERVERS.extend(['fileflyer','playedto','tunepk','powvideo','videomega','mega','vidspot','netutv','rutube'])
 FREE_SERVERS.extend(['videozed','documentary','hugefiles', 'firedrive','videott','tumitv','gamovideo'])
 FREE_SERVERS.extend(['torrent','video4you','mailru'])
+FREE_SERVERS.extend(['streaminto'])
 
 # Lista de TODOS los servidores que funcionan con cuenta premium individual
 PREMIUM_SERVERS = ['uploadedto','nowvideo']
