@@ -20,6 +20,8 @@ __language__ = "ES"
 
 DEBUG = config.get_setting("debug")
 
+BASE_URL = "http://anonymouse.org/cgi-bin/anon-www.cgi/http://www.tumejortv.com"
+
 def isGeneric():
     return True
 
@@ -28,10 +30,10 @@ def mainlist(item):
     
     itemlist = []
 
-    itemlist.append( Item(channel=__channel__, action="submenu" , title="Peliculas"    , url="http://www.tumejortv.com/directorio/peliculas", extra="peliculas"))
-    itemlist.append( Item(channel=__channel__, action="submenu" , title="Peliculas VO" , url="http://www.tumejortv.com/directorio/peliculas_vo", extra="peliculas"))
-    itemlist.append( Item(channel=__channel__, action="submenu" , title="Series"       , url="http://www.tumejortv.com/directorio/series", extra="series"))
-    itemlist.append( Item(channel=__channel__, action="submenu" , title="Series VO"    , url="http://www.tumejortv.com/directorio/series_vo", extra="series"))
+    itemlist.append( Item(channel=__channel__, action="submenu" , title="Peliculas"    , url=BASE_URL+"/directorio/peliculas", extra="peliculas"))
+    itemlist.append( Item(channel=__channel__, action="submenu" , title="Peliculas VO" , url=BASE_URL+"/directorio/peliculas_vo", extra="peliculas"))
+    itemlist.append( Item(channel=__channel__, action="submenu" , title="Series"       , url=BASE_URL+"/directorio/series", extra="series"))
+    itemlist.append( Item(channel=__channel__, action="submenu" , title="Series VO"    , url=BASE_URL+"/directorio/series_vo", extra="series"))
 
     return itemlist
 
@@ -169,6 +171,8 @@ def findepisodios(item):
     
     itemlist=[]
     
+    if item.url.startswith("http://www.tumejortv.com"):
+        item.url=item.url.replace("http://www.tumejortv.com",BASE_URL)
     data = scrapertools.cache_page(item.url)
     #<a href="#" class="antlo_temporadas_li" title="Haga clic para ver listado de capitulos"><img src="http://www.tumejortv.com/images/general/more.png" /> TEMPORADA 1<span style="float:right;"><img src="http://www.tumejortv.com/images/general/estreno.png" alt="EstrenoT"/></span></a><div><table class="antlo_links_table">
     patron = '<a href="\#" class="antlo_temporadas_li" title="Haga clic[^"]+"><img[^>]+>( TEMPORADA [^<]+)<(.*?)</table>'
@@ -217,6 +221,9 @@ def findepisodios(item):
 def findvideos(item):
     logger.info("[tumejortv.py] findvideos")
     
+    if item.url.startswith("http://www.tumejortv.com"):
+        item.url=item.url.replace("http://www.tumejortv.com",BASE_URL)
+
     data = scrapertools.cache_page(item.url)
     itemlist=[]
     '''
@@ -289,7 +296,10 @@ def findvideos(item):
 
 def findvideospeliculas(item):
     logger.info("[tumejortv.py] findvideospeliculas")
-    
+
+    if item.url.startswith("http://www.tumejortv.com"):
+        item.url=item.url.replace("http://www.tumejortv.com",BASE_URL)
+
     data = scrapertools.cache_page(item.url)
     itemlist=[]
     
@@ -354,7 +364,10 @@ def findvideospeliculas(item):
 
 def findvideos_partes(item):
     logger.info("[tumejortv.py] findvideospeliculas")
-    
+
+    if item.url.startswith("http://www.tumejortv.com"):
+        item.url=item.url.replace("http://www.tumejortv.com",BASE_URL)
+
     data = scrapertools.cache_page(item.url)
     itemlist = servertools.find_video_items(data=data)
     for videoitem in itemlist:

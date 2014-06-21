@@ -1,3 +1,8 @@
+3.2.70.grk
+
+    - Actualizado a versión 3.2.70 oficial
+
+
 3.2.69.grk
 
     - Añadido soporte para reproducir torrents con XBMCTorrent

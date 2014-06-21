@@ -38,10 +38,8 @@ def from_torrent_url(url):
         'dn': metadata['info']['name'],
         'tr': metadata['announce'],
     }
-    logger.info("[torrent.py] %s" % params)
-
+    logger.info(params)
     paramstr = urllib.urlencode(params)
-
     return 'magnet:?%s&%s' % ('xt=urn:btih:%s' % b32hash, paramstr)
 
 def url_get(url, params={}, headers={}):

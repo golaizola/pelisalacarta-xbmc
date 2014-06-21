@@ -27,6 +27,9 @@ ENLACESPEPITO_REQUEST_HEADERS = [
     ["Accept-Encoding","gzip, deflate"],
     ["Accept-Language" , "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3"],
     ["Accept" , "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"],
+    ["Cookie" , "__test"],
+    ["Cookie" , "_ga=GA1.2.1328656124.1402475801"],
+    ["Referer" , "http://star-trek-voyager.seriespepito.com/temporada-1/capitulo-5/"],
     ["Connection" , "keep-alive"]
 ]
 
@@ -43,6 +46,7 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, action="novedades"        , title="Novedades", url="http://www.seriespepito.com/nuevos-capitulos/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
     itemlist.append( Item(channel=__channel__, action="lomasvisto"        , title="Lo más visto", url="http://www.seriespepito.com/nuevos-capitulos/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
     itemlist.append( Item(channel=__channel__, action="listalfabetico"   , title="Listado alfabético",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+    itemlist.append( Item(channel=__channel__, action="allserieslist"    , title="Listado completo",    url="http://www.seriespepito.com/",fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
 
     return itemlist
 
@@ -117,30 +121,18 @@ def lomasvisto(item):
     return itemlist
 
 def allserieslist(item):
-    logger.info("[seriespepito.py] allserieslist")
-
-    # Descarga la página
-    data = scrapertools.cachePage(item.url)
-    data = scrapertools.get_match(data,'<ul id="lista_completa_series_ul" class="nav">(.*?)</ul>')
-    #<li><a title="112: Héroes en la calle" href="http://112-heroes-de-la-calle.seriespepito.com/">112: Héroes en la calle</a></li>
-    patron = '<li><a title="([^"]+)" href="([^"]+)"'
-
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    #scrapertools.printMatches(matches)
-
+    logger.info("[seriespepito.py] completo()")
     itemlist = []
-    for match in matches:
-        scrapedtitle = match[0].strip()
-        scrapedurl = match[1]
-        scrapedthumbnail = ""
-        scrapedplot = ""
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 
-        # Ajusta el encoding a UTF-8
-        scrapedtitle = scrapertools.htmlclean(scrapedtitle)
-        scrapedplot = unicode( scrapedplot, "iso-8859-1" , errors="replace" ).encode("utf-8")
-
-        itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, show=scrapedtitle,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+    # Carga el menú "Alfabético" de series
+    item = Item(channel=__channel__, action="listalfabetico")
+    items_letras = listalfabetico(item)
+    
+    # Para cada letra
+    for item_letra in items_letras:
+        # Lee las series
+        items_programas = series(item_letra)
+        itemlist.extend( items_programas )
 
     return itemlist
 
@@ -306,7 +298,7 @@ def findvideos(item):
         if "flag_3" in idiomas:
             title = title + " (VOS)"
 
-        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, extra=item.url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
+        itemlist.append( Item(channel=__channel__, action="play" , title=title , url=url, thumbnail=item.thumbnail, plot=item.plot, show=item.show, folder=False,fanart="http://pelisalacarta.mimediacenter.info/fanart/seriespepito.jpg"))
 
     return itemlist
 
@@ -314,8 +306,7 @@ def play(item):
     logger.info("[seriespepito.py] play")
     itemlist=[]
     
-    mediaurl = get_server_link_series(item.url, item.extra)
-
+    mediaurl = get_server_link_series(item.url)
     # Busca el vídeo
     videoitemlist = servertools.find_video_items(data=mediaurl)
     i=1
@@ -353,11 +344,13 @@ def get_cookie(html):
 # y posiciones del Javascript
 #
 def convert_link(html, link_type):
+
     hash_seed = get_cookie(html);
     logger.info("[seriespepito.py] hash_seed="+hash_seed)
 
     HASH_PAT = 'CryptoJS\.(\w+)\('
     hash_func = scrapertools.find_single_match(html, HASH_PAT).lower()
+
     if hash_func == "md5":
         hash = hashlib.md5(hash_seed).hexdigest()
     else:
@@ -372,11 +365,11 @@ def convert_link(html, link_type):
 
     href = list(scrapertools.find_single_match(html, HREF_SEARCH_PAT))
     logger.info("[seriespepito.py] href="+repr(href))
-
     CHAR_REPLACE_PAT = '[a-z]\[(\d+)\]="(.)";'
 
     matches = re.findall(CHAR_REPLACE_PAT , html, flags=re.DOTALL|re.IGNORECASE)
     logger.info("[seriespepito.py] matches="+repr(matches))
+
     for match in matches:
         href[int(match[0])] = match[1]
 
@@ -384,36 +377,28 @@ def convert_link(html, link_type):
 
     return 'http://www.enlacespepito.com/' + href + '.html'
 
-def get_server_link(first_link, referer):
-    logger.info("[seriespepito.py] first_link=" + first_link + ", link_type=" + referer)
+def get_server_link(first_link, link_type):
+    logger.info("[seriespepito.py] first_link="+str(first_link)+", link_type="+str(link_type))
 
-    # Sin el Referer da 403
-    headers = list(ENLACESPEPITO_REQUEST_HEADERS)
-    headers.append(['Referer', referer])
-
-    html = scrapertools.downloadpage(first_link, headers = headers)
+    html = scrapertools.downloadpage(first_link, headers = ENLACESPEPITO_REQUEST_HEADERS)
     logger.info("[seriespepito.py] html="+html)
-
-    if referer.find('.seriespepito.com') != -1:
-        link_type = SERIES_PEPITO
-    else:
-        link_type = PELICULAS_PEPITO
 
     fixed_link = convert_link(html, link_type)
     logger.info("[seriespepito.py] fixed_link="+fixed_link)
 
-    # Sin el Referer da 403
-    headers[-1] = ['Referer', first_link]
+    # Sin el Referer da 404
+    #ENLACESPEPITO_REQUEST_HEADERS.append(['Referer', first_link])
 
-    return scrapertools.get_header_from_response(fixed_link, header_to_get="location", headers = headers)
+    return scrapertools.get_header_from_response(fixed_link, header_to_get="location", headers = ENLACESPEPITO_REQUEST_HEADERS)
 
 # Estas funciones son las únicas que deberían llamarse desde fuera
 #
-def get_server_link_series(first_link, referer):
-    return get_server_link(first_link, referer)
+def get_server_link_series(first_link):
+    return get_server_link(first_link, SERIES_PEPITO)
 
-def get_server_link_peliculas(first_link, referer):
-    return get_server_link(first_link, referer)
+def get_server_link_peliculas(first_link):
+
+    return get_server_link(first_link, PELICULAS_PEPITO)
 
 
 
